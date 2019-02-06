@@ -60,7 +60,7 @@
         0 <= colIndex && colIndex < this.get('n')
       );
     },
-
+    
 
 /*
          _             _     _
@@ -79,12 +79,36 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      //Input: array
+      // Create a holder for our count
+      var count = 0;
+      // Iterate over our row
+      for (var i = 0; i < rowIndex.length; i++){
+        if (rowIndex[i] === 1) {
+          // For each piece increment our count
+          count++;
+        }
+        if (count > 1) {
+          // If more than one return true
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any rows on this board contain conflicts
-    hasAnyRowConflicts: function() {
-      return false; // fixme
+    hasAnyRowConflicts: function() {   
+      // Input -> An object that holds n arrays with numerical keys
+      // Create a container and call our Row Getter
+      var allRows = this.rows();
+      // Iterate over container of rows
+      var booleanHolder = [];
+      for (var rowIndex in allRows) {
+        // Call row helper function for each row
+        booleanHolder.push(this.hasRowConflictAt(allRows[rowIndex]));
+      }
+      // Output a boolean based on if any row is true
+      return booleanHolder.some(o => o);
     },
 
 
