@@ -32,7 +32,7 @@
     _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
       return colIndex - rowIndex;
     },
-      
+
 
 
     _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
@@ -62,16 +62,16 @@
         0 <= colIndex && colIndex < this.get('n')
       );
     },
-    
 
-/*
+
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
     \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_
     |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___(_)
 
- */
+    */
     /*=========================================================================
     =                 TODO: fill in these Helper Functions                    =
     =========================================================================*/
@@ -85,7 +85,7 @@
       // Create a holder for our count
       var count = 0;
       // Iterate over our row
-      for (var i = 0; i < rowIndex.length; i++){
+      for (var i = 0; i < rowIndex.length; i++) {
         if (rowIndex[i] === 1) {
           // For each piece increment our count
           count++;
@@ -99,7 +99,7 @@
     },
 
     // test if any rows on this board contain conflicts
-    hasAnyRowConflicts: function() {   
+    hasAnyRowConflicts: function() {
       // Input -> An object that holds n arrays with numerical keys
       // Create a container and call our Row Getter
       var allRows = this.rows();
@@ -122,7 +122,7 @@
     hasColConflictAt: function(colIndex) {
       var count = 0;
       // Iterate over our column
-      for (var j = 0; j < colIndex.length; j++){
+      for (var j = 0; j < colIndex.length; j++) {
         if (colIndex[j] === 1) {
           // For each piece increment our count
           count++;
@@ -149,7 +149,7 @@
           }
           allColumns[ind].push(allRows[key][nLength]);
         }
-      } 
+      }
       var booleanHolder = [];
       for (var columnIndex in allColumns) {
         booleanHolder.push(this.hasColConflictAt(allColumns[columnIndex]));
@@ -165,9 +165,9 @@
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       var count = 0;
-      var diag  = majorDiagonalColumnIndexAtFirstRow;
+      var diag = majorDiagonalColumnIndexAtFirstRow;
       // Iterate over our diagonal
-      for (var k = 0; k < diag.length; k++){
+      for (var k = 0; k < diag.length; k++) {
         if (diag[k] === 1) {
           // For each piece increment our count
           count++;
@@ -177,63 +177,56 @@
           return true;
         }
       }
-      return false;  
+      return false;
     },
-    
+
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
       // MajorDiagonalOn: Start from top right ~ move left on column and move
-      // get rows
       var runMajorDiagonal = this.hasMajorDiagonalConflictAt.bind(this);
       var allRows = this.rows();
-      // establish a object variable for all diagonals: VAR A = {}
       var tempDiagonals = [];
-      // establish holding variable row allocation calculation (ie count): VAR B
       var columnDecrementor = allRows[0].length - 2;
       var rowStart = true;
-      // establish variable to increment row: VAR C
       var rowIncrementor = 0;
-      //iterate over all rows starting on first row, last index
-      while (rowIncrementor < allRows.length) {  
+      //terate over all rows starting on first row, last index
+      while (rowIncrementor < allRows.length) {
         //Start at the top right most row and column
         //Create an array for each diagonal by
         //Getting the value of the current row then going down and left until we can't
         //WHEN first row is exhausted change strategies and then increment on rows until we can't
         //For each array created we execute a Diagonal Test
-        tempDiagonals = magic(allRows,rowIncrementor,columnDecrementor);
+        tempDiagonals = magic(allRows, rowIncrementor, columnDecrementor);
         if (runMajorDiagonal(tempDiagonals)) {
           return true;
         }
-        if(rowStart && columnDecrementor > 0){
-          columnDecrementor -- ;
+        if (rowStart && columnDecrementor > 0) {
+          columnDecrementor --;
         } else {
           rowIncrementor ++;
         }
       }
 
-      function magic (obj, row, column) {
+      var magic = function (obj, row, column) {
         var result = [];
         var currRow = row;
         var currColumn = column;
-        function innerMagic (specificLocation){
+        var innerMagic = function (specificLocation) {
           result.push(specificLocation);
-          if(currRow < obj[0].length -1){
+          if (currRow < obj[0].length - 1) {
             currRow ++;
             currColumn ++;
             var exists = obj[currRow][currColumn];
-            if(exists !== undefined) {
-              
+            if (exists !== undefined) {
               innerMagic(exists);
             }
           }
-        }
+        };
         innerMagic(obj[currRow][currColumn]);
         return result;
-      } 
-      return false; // fixme
+      };
+      return false;
     },
-
-
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
