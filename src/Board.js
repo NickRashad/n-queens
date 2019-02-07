@@ -104,16 +104,14 @@
       // Create a container and call our Row Getter
       var allRows = this.rows();
       // Iterate over container of rows
-      var booleanHolder = [];
+      var rowResults = [];
       for (var rowIndex in allRows) {
         // Call row helper function for each row
-        booleanHolder.push(this.hasRowConflictAt(allRows[rowIndex]));
+        rowResults.push(this.hasRowConflictAt(allRows[rowIndex]));
       }
       // Output a boolean based on if any row is true
-      return booleanHolder.some(o => o);
+      return rowResults.some(o => o);
     },
-
-
 
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
@@ -137,8 +135,8 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      //input: object with numerical keys relating to 4 arrays - each array is a row
-      //all rows and establish columns for each row
+      // Input: object with numerical keys relating to 4 arrays - each array is a row
+      // All rows and establish columns for each row
       var allColumns = {};
       var allRows = this.rows();
       var nLength = 0;
@@ -150,14 +148,12 @@
           allColumns[ind].push(allRows[key][nLength]);
         }
       }
-      var booleanHolder = [];
+      var columnResults = [];
       for (var columnIndex in allColumns) {
-        booleanHolder.push(this.hasColConflictAt(allColumns[columnIndex]));
+        columnResults.push(this.hasColConflictAt(allColumns[columnIndex]));
       }
-      return booleanHolder.some(o => o);
+      return columnResults.some(o => o);
     },
-
-
 
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
@@ -168,12 +164,10 @@
       var diag = majorDiagonalColumnIndexAtFirstRow;
       // Iterate over our diagonal
       for (var k = 0; k < diag.length; k++) {
-        if (diag[k] === 1) {
-          // For each piece increment our count
+        if (diag[k] === 1) { // For each piece increment our count
           count++;
         }
-        if (count > 1) {
-          // If more than one return true
+        if (count > 1) { // If more than one return true
           return true;
         }
       }
@@ -182,37 +176,18 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      // MajorDiagonalOn: Start from top right ~ move left on column and move
       var runMajorDiagonal = this.hasMajorDiagonalConflictAt.bind(this);
       var allRows = this.rows();
-      var tempDiagonals = [];
       var columnDecrementor = allRows[0].length - 2;
-      var rowStart = true;
       var rowIncrementor = 0;
-      //terate over all rows starting on first row, last index
-      while (rowIncrementor < allRows.length) {
-        //Start at the top right most row and column
-        //Create an array for each diagonal by
-        //Getting the value of the current row then going down and left until we can't
-        //WHEN first row is exhausted change strategies and then increment on rows until we can't
-        //For each array created we execute a Diagonal Test
-        tempDiagonals = magic(allRows, rowIncrementor, columnDecrementor);
-        if (runMajorDiagonal(tempDiagonals)) {
-          return true;
-        }
-        if (rowStart && columnDecrementor > 0) {
-          columnDecrementor --;
-        } else {
-          rowIncrementor ++;
-        }
-      }
-
+      var tempDiagonals = [];
+      // Create a fn that will create a diagonal array when given starting point
       var magic = function (obj, row, column) {
         var result = [];
         var currRow = row;
         var currColumn = column;
-        var innerMagic = function (specificLocation) {
-          result.push(specificLocation);
+        var innerMagic = function (specificVal) {
+          result.push(specificVal);
           if (currRow < obj[0].length - 1) {
             currRow ++;
             currColumn ++;
@@ -225,6 +200,23 @@
         innerMagic(obj[currRow][currColumn]);
         return result;
       };
+      // Iterate over all rows starting on first row, last index
+      // Start at the top right most row and column
+      // Create an array for each diagonal by
+      // Getting the value of the current row then going down and left until we can't
+      // WHEN first row is exhausted change strategies and then increment on rows until we can't
+      // For each array created we execute a Diagonal Test
+      while (rowIncrementor < allRows.length) {
+        tempDiagonals = magic(allRows, rowIncrementor, columnDecrementor);
+        if (runMajorDiagonal(tempDiagonals)) {
+          return true;
+        }
+        if (columnDecrementor > 0) {
+          columnDecrementor --;
+        } else {
+          rowIncrementor ++;
+        }
+      }
       return false;
     },
 
