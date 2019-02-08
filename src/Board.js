@@ -225,12 +225,65 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var count = 0;
+      var diag = minorDiagonalColumnIndexAtFirstRow;
+      // Iterate over our diagonal
+      for (var n = 0; n < diag.length; n++) {
+        if (diag[n] === 1) { // For each piece increment our count
+          count++;
+        }
+        if (count > 1) { // If more than one return true
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var runMinorDiagonal = this.hasMinorDiagonalConflictAt.bind(this);
+      var allRows = this.rows();
+      var columnIncrementor = 1; /* Impact */
+      var rowIncrementor = 0; /* Impact */
+      var tempDiagonals = [];
+      // Create a fn that will create a diagonal array when given starting point
+      debugger;
+      var magic = function (obj, row, column) {
+        var result = [];
+        var currRow = row;
+        var currColumn = column;
+        var innerMagic = function (specificVal) {
+          result.push(specificVal);
+          if (currRow < obj[0].length - 1) { /* Impact */
+            currRow ++; /* Impact */
+            currColumn --; /* Impact */
+            var exists = obj[currRow][currColumn];
+            if (exists !== undefined) {
+              innerMagic(exists);
+            }
+          }
+        };
+        innerMagic(obj[currRow][currColumn]);
+        return result;
+      };
+      // Iterate over all rows starting on first row, last index
+      // Start at the top right most row and column
+      // Create an array for each diagonal by
+      // Getting the value of the current row then going down and left until we can't
+      // WHEN first row is exhausted change strategies and then increment on rows until we can't
+      // For each array created we execute a Diagonal Test
+      while (rowIncrementor < allRows.length) {
+        tempDiagonals = magic(allRows, rowIncrementor, columnIncrementor);
+        if (runMinorDiagonal(tempDiagonals)) {
+          return true;
+        }
+        if (columnIncrementor < allRows.length - 1) { //Update for later to move variable
+          columnIncrementor ++;
+        } else {
+          rowIncrementor ++;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
