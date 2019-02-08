@@ -243,20 +243,20 @@
     hasAnyMinorDiagonalConflicts: function() {
       var runMinorDiagonal = this.hasMinorDiagonalConflictAt.bind(this);
       var allRows = this.rows();
-      var columnIncrementor = 1; /* Impact */
-      var rowIncrementor = 0; /* Impact */
+      var nLength = allRows.length - 1;
+      var columnIncrementor = 1;
+      var rowIncrementor = 0;
       var tempDiagonals = [];
       // Create a fn that will create a diagonal array when given starting point
-      debugger;
       var magic = function (obj, row, column) {
         var result = [];
         var currRow = row;
         var currColumn = column;
         var innerMagic = function (specificVal) {
           result.push(specificVal);
-          if (currRow < obj[0].length - 1) { /* Impact */
-            currRow ++; /* Impact */
-            currColumn --; /* Impact */
+          if (currRow < obj[0].length - 1) {
+            currRow ++;
+            currColumn --;
             var exists = obj[currRow][currColumn];
             if (exists !== undefined) {
               innerMagic(exists);
@@ -277,7 +277,7 @@
         if (runMinorDiagonal(tempDiagonals)) {
           return true;
         }
-        if (columnIncrementor < allRows.length - 1) { //Update for later to move variable
+        if (columnIncrementor < nLength ) {
           columnIncrementor ++;
         } else {
           rowIncrementor ++;
