@@ -252,9 +252,10 @@
         var result = [];
         var currRow = row;
         var currColumn = column;
+        var objNLength = obj[0].length - 1;
         var innerMagic = function (specificVal) {
           result.push(specificVal);
-          if (currRow < obj[0].length - 1) {
+          if (currRow < objNLength) {
             currRow ++;
             currColumn --;
             var exists = obj[currRow][currColumn];
