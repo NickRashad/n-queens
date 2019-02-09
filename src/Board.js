@@ -80,22 +80,23 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
-    hasRowConflictAt: function(rowIndex) {
-      //Input: array
-      // Create a holder for our count
-      var count = 0;
-      // Iterate over our row
-      for (var i = 0; i < rowIndex.length; i++) {
-        if (rowIndex[i] === 1) {
-          // For each piece increment our count
-          count++;
-        }
-        if (count > 1) {
-          // If more than one return true
-          return true;
-        }
-      }
-      return false;
+    hasRowConflictAt: function(sRow) {
+      return sRow.reduce((acc, val) => acc + val, 0) > 1;
+      // //Input: array
+      // // Create a holder for our count
+      // var count = 0;
+      // // Iterate over our row
+      // for (var i = 0; i < sRow.length; i++) {
+      //   if (sRow[i] === 1) {
+      //     // For each piece increment our count
+      //     count++;
+      //   }
+      //   if (count > 1) {
+      //     // If more than one return true
+      //     return true;
+      //   }
+      // }
+      // return false;
     },
 
     // test if any rows on this board contain conflicts
@@ -117,20 +118,21 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
-    hasColConflictAt: function(colIndex) {
-      var count = 0;
-      // Iterate over our column
-      for (var j = 0; j < colIndex.length; j++) {
-        if (colIndex[j] === 1) {
-          // For each piece increment our count
-          count++;
-        }
-        if (count > 1) {
-          // If more than one return true
-          return true;
-        }
-      }
-      return false;
+    hasColConflictAt: function(sColumn) {
+      return sColumn.reduce((acc, val) => acc + val, 0) > 1;
+      // var count = 0;
+      // // Iterate over our column
+      // for (var j = 0; j < sColumn.length; j++) {
+      //   if (sColumn[j] === 1) {
+      //     // For each piece increment our count
+      //     count++;
+      //   }
+      //   if (count > 1) {
+      //     // If more than one return true
+      //     return true;
+      //   }
+      // }
+      // return false;
     },
 
     // test if any columns on this board contain conflicts
@@ -139,19 +141,19 @@
       // All rows and establish columns for each row
       var allColumns = {};
       var allRows = this.rows();
-      var nLength = 0;
       for (var key in allRows) {
         for (var ind = 0; ind < allRows[key].length; ind++) {
           if (!allColumns[ind]) {
             allColumns[ind] = [];
           }
-          allColumns[ind].push(allRows[key][nLength]);
+          allColumns[ind].push(allRows[key][ind]);
         }
       }
       var columnResults = [];
       for (var columnIndex in allColumns) {
         columnResults.push(this.hasColConflictAt(allColumns[columnIndex]));
       }
+
       return columnResults.some(o => o);
     },
 
