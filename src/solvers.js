@@ -22,7 +22,7 @@ window.findNRooksSolution = function(n) {
   var rowIndex = 0;
   var colIndex = 0;
 
-  // Middle Game [0]
+  // Middle Game
   while (rowIndex < n && colIndex < n) {
   // Start on first row
     currBoard.togglePiece(rowIndex, colIndex);
@@ -39,9 +39,12 @@ window.findNRooksSolution = function(n) {
 
 // Return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
+  // Beginning Game
   var solutionCount = 0;
   var brd = new Board({n: n});
-  var middleGame = function (brd, rowIndex = 0) {
+
+  // Middle Game
+  var middleGame = function (brd, rowIndex) {
     var upper = 0;
     for (var colIndex = 0; colIndex < n; colIndex++) {
       var stat = true;
@@ -61,42 +64,48 @@ window.countNRooksSolutions = function(n) {
     }
     return upper;
   };
-  solutionCount = middleGame(brd);
+  solutionCount = middleGame(brd, 0);
 
   // Endgame
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
-// window.countNRooksSolutions = function(n) {
-//   var solutionCount = 0;
-//   var brd = new Board({n: n});
-//   var middleGame = function (brd, rowIndex = 0) {
-//     for (var colIndex = 0; colIndex < n; colIndex++) {
-//       brd.togglePiece(rowIndex, colIndex);
-//       if (brd.hasAnyColConflicts() === false && brd.hasAnyRowConflicts() === false) { // Check for conflicts
-//         if (rowIndex === (n - 1)) { // If on last row and success then valid solution
-//           solutionCount++;
-//           brd.togglePiece(rowIndex, colIndex);
-//         } else { // Next row  //!!Possible else if
-//           middleGame(brd, rowIndex + 1);
-//         }
-//       } else { // Else if conflict -> untoggle piece and allow for loop to increment
-//         brd.togglePiece(rowIndex, colIndex);
-//       }
 
-//     }
-//   };
-//   middleGame(brd);
-//   debugger;
-
-//   // Endgame
-//   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-//   return solutionCount;
-// };
-// return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
+// Return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution = 0; //fixme
+  var brd = new Board({n: n});
+  debugger;
+  // Middle Game
+  if (n === 0) {
+    return [0];
+  } else if (n === 2 || n === 3 ) {
+    return [];
+  }
+  var stat = true;
+  var middleGame = function (brd, rowIndex) {
+    for (var colIndex = 0; colIndex < n; colIndex++) {
+      debugger;
+      brd.togglePiece(rowIndex, colIndex);
+      if (brd.hasAnyMajorDiagonalConflicts() || brd.hasAnyMinorDiagonalConflicts() || brd.hasAnyColConflicts() || brd.hasAnyRowConflicts()) { // Check for conflicts
+        brd.togglePiece(rowIndex, colIndex);
+        stat = false;
+      } else if (rowIndex === (n - 1)) { // If on last row and success then valid solution
+        stat = false;
+        brd.togglePiece(rowIndex, colIndex);
+        return brd.rows();
+      }
+      debugger;
+      if (stat) {
+        middleGame(brd, rowIndex + 1);
+        brd.togglePiece(rowIndex, colIndex);
+      }
+    }
+  };
+  solution = middleGame(brd, 0);
 
+  debugger;
+  //Endgame
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
