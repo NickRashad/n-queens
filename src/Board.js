@@ -180,13 +180,7 @@
     hasAnyMajorDiagonalConflicts: function() {
       var runMajorDiagonal = this.hasMajorDiagonalConflictAt.bind(this);
       var allRows = this.rows();
-      if (allRows[0] === undefined) { // If the board is 0 then no queens conflicts
-        return false;
-      } else if (allRows[0].length === 1) {
-        var columnDecrementor = 1;
-      } else {
-        var columnDecrementor = allRows[0].length - 2;
-      }
+      var columnDecrementor = allRows[0] !== undefined ? allRows[0].length - 1 : 0;
       var rowIncrementor = 0;
       var tempDiagonals = [];
       // Create a fn that will create a diagonal array when given starting point

@@ -75,30 +75,47 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   var solution = 0; //fixme
   var brd = new Board({n: n});
-  debugger;
+  var seekSolution = true;
+  var queenCount = 0;
+  var addPiece = function (rowIndex, colIndex) {
+    brd.togglePiece(rowIndex, colIndex);
+    queenCount ++;
+  };
+  var removePiece = function (rowIndex, colIndex) {
+    brd.togglePiece(rowIndex, colIndex);
+    queenCount --;
+    successfulPlacement = false;
+  };
+
   // Middle Game
   var middleGame = function (brd, rowIndex) {
-    for (var colIndex = 0; colIndex < n; colIndex++) {
-      debugger;
-      var stat = true;
-      brd.togglePiece(rowIndex, colIndex);
+    for (var colIndex = 0; colIndex < n && seekSolution ; colIndex++) {
+      var successfulPlacement = true;
+      addPiece(rowIndex, colIndex);
       if (brd.hasAnyMajorDiagonalConflicts() || brd.hasAnyMinorDiagonalConflicts() || brd.hasAnyColConflicts() || brd.hasAnyRowConflicts()) { // Check for conflicts
         brd.togglePiece(rowIndex, colIndex);
-        stat = false;
-      } else if (rowIndex === (n - 1)) { // If on last row and success then valid solution
-        stat = false;
-        return brd.rows();
-        brd.togglePiece(rowIndex, colIndex);
+        queenCount --;
+        successfulPlacement = false;
+        // removePiece(rowIndex, colIndex);
+      } else if (queenCount === n && seekSolution) { // If on last row and success then valid solution
+        seekSolution = false;
+        solution = brd.rows();
+        //brd.togglePiece(rowIndex, colIndex);
+        return null;
       }
-      if (stat) {
+      if (successfulPlacement && seekSolution) {
         middleGame(brd, rowIndex + 1);
-        brd.togglePiece(rowIndex, colIndex);
+        if (seekSolution) {
+          brd.togglePiece(rowIndex, colIndex);
+          queenCount --;
+        }
       }
     }
   };
-  solution = middleGame(brd, 0) || {n: n};
+  //solution = middleGame(brd, 0) || {n: n};
+  middleGame(brd, 0);
+  solution = solution || {n: n};
 
-  debugger;
   //Endgame
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
