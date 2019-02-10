@@ -77,32 +77,26 @@ window.findNQueensSolution = function(n) {
   var brd = new Board({n: n});
   debugger;
   // Middle Game
-  if (n === 0) {
-    return [0];
-  } else if (n === 2 || n === 3 ) {
-    return [];
-  }
-  var stat = true;
   var middleGame = function (brd, rowIndex) {
     for (var colIndex = 0; colIndex < n; colIndex++) {
       debugger;
+      var stat = true;
       brd.togglePiece(rowIndex, colIndex);
       if (brd.hasAnyMajorDiagonalConflicts() || brd.hasAnyMinorDiagonalConflicts() || brd.hasAnyColConflicts() || brd.hasAnyRowConflicts()) { // Check for conflicts
         brd.togglePiece(rowIndex, colIndex);
         stat = false;
       } else if (rowIndex === (n - 1)) { // If on last row and success then valid solution
         stat = false;
-        brd.togglePiece(rowIndex, colIndex);
         return brd.rows();
+        brd.togglePiece(rowIndex, colIndex);
       }
-      debugger;
       if (stat) {
         middleGame(brd, rowIndex + 1);
         brd.togglePiece(rowIndex, colIndex);
       }
     }
   };
-  solution = middleGame(brd, 0);
+  solution = middleGame(brd, 0) || {n: n};
 
   debugger;
   //Endgame
@@ -110,7 +104,7 @@ window.findNQueensSolution = function(n) {
   return solution;
 };
 
-// return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
+// Return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
   var solutionCount = undefined; //fixme
 
