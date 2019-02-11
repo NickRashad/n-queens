@@ -81,22 +81,21 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(sRow) {
-      return sRow.reduce((acc, val) => acc + val, 0) > 1;
-      // //Input: array
-      // // Create a holder for our count
-      // var count = 0;
-      // // Iterate over our row
-      // for (var i = 0; i < sRow.length; i++) {
-      //   if (sRow[i] === 1) {
-      //     // For each piece increment our count
-      //     count++;
-      //   }
-      //   if (count > 1) {
-      //     // If more than one return true
-      //     return true;
-      //   }
-      // }
-      // return false;
+      // return sRow.reduce((acc, val) => acc + val, 0) > 1;
+      // Iterative method vs Reduce ~ Reduce seems to take longer
+      var count = 0;
+      // Iterate over our row
+      for (var i = 0; i < sRow.length; i++) {
+        if (sRow[i] === 1) {
+          // For each piece increment our count
+          count++;
+        }
+        if (count > 1) {
+          // If more than one return true
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any rows on this board contain conflicts
@@ -119,20 +118,21 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(sColumn) {
-      return sColumn.reduce((acc, val) => acc + val, 0) > 1;
-      // var count = 0;
-      // // Iterate over our column
-      // for (var j = 0; j < sColumn.length; j++) {
-      //   if (sColumn[j] === 1) {
-      //     // For each piece increment our count
-      //     count++;
-      //   }
-      //   if (count > 1) {
-      //     // If more than one return true
-      //     return true;
-      //   }
-      // }
-      // return false;
+      // return sColumn.reduce((acc, val) => acc + val, 0) > 1;
+      // Iterative method vs Reduce ~ Reduce seems to take longer
+      var count = 0;
+      // Iterate over our column
+      for (var j = 0; j < sColumn.length; j++) {
+        if (sColumn[j] === 1) {
+          // For each piece increment our count
+          count++;
+        }
+        if (count > 1) {
+          // If more than one return true
+          return true;
+        }
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
@@ -162,6 +162,8 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      // return majorDiagonalColumnIndexAtFirstRow.reduce((acc, val) => acc + val, 0) > 1;
+      // Iterative method vs Reduce ~ Reduce seems to take longer
       var count = 0;
       var diag = majorDiagonalColumnIndexAtFirstRow;
       // Iterate over our diagonal
@@ -227,6 +229,8 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+      // return minorDiagonalColumnIndexAtFirstRow.reduce((acc, val) => acc + val, 0) > 1;
+      // Iterative method vs Reduce
       var count = 0;
       var diag = minorDiagonalColumnIndexAtFirstRow;
       // Iterate over our diagonal
